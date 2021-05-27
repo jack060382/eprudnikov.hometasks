@@ -27,11 +27,11 @@ public class Main {
         */
 
         int[] array = {0,1,2,3,4,5,6,7,8,9};
-        /*
+
         printArray(array);
         array = doTask8(array, 3);
         printArray(array);
-        */
+        System.out.println("\n");
         printArray(array);
         array = doTask8(array, -3);
         printArray(array);
