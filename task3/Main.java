@@ -1,6 +1,8 @@
 package task3;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Random;
 
 public class Main {
 
@@ -10,10 +12,153 @@ public class Main {
         //doTask3();
         //doTask4();
 
-        //int[] array= doTask5(10, 55);
-        //printArray(array);
+        /*
+        int[] array= doTask5(10, 55);
+        printArray(array);
+        */
 
+        //doTask6();
+
+        /*
+        int[] array = getRandomArray(5, 10);
+        printArray(array);
+        boolean result = doTask7(array);
+        System.out.println(result);
+        */
+
+        int[] array = {0,1,2,3,4,5,6,7,8,9};
+        /*
+        printArray(array);
+        array = doTask8(array, 3);
+        printArray(array);
+        */
+        printArray(array);
+        array = doTask8(array, -3);
+        printArray(array);
     }
+
+
+    /**
+     * *** Написать метод, которому на вход подается одномерный массив и число n
+     * (может быть положительным, или отрицательным),
+     * при этом метод должен сместить все элементы массива на n позиций.
+     * Элементы смещаются циклично. Для усложнения задачи нельзя пользоваться вспомогательными массивами.
+     * Примеры: [ 1, 2, 3 ] при n = 1 (на один вправо) -> [ 3, 1, 2 ];
+     * [ 3, 5, 6, 1] при n = -2 (на два влево) -> [ 6, 1, 3, 5 ].
+     * При каком n в какую сторону сдвиг можете выбирать сами.
+     */
+    private static int[] doTask8(int[] array, int n) {
+        for (int i = 1; i <= Math.abs(n); i++) {
+            if (n > 0) {
+                array = doArrayStepRight(array);
+            }
+            else {
+                array = doArrayStepLeft(array);
+            }
+        }
+
+        return array;
+    }
+
+    private static int[] doArrayStepLeft(int[] array) {
+        int i = array.length-1;
+        int tmp = 0;
+        tmp = array[0];
+        int t = 0, t1;
+        for (int j = array.length-1; j >= 0; j--) {
+            if (j == i+1) {
+                t = array[j];
+                array[j] = array[i];
+            }
+            else {
+                t1 = array[j];
+                array[j] = t;
+                t = t1;
+            }
+        }
+        array[i] = tmp;
+
+        return array;
+    }
+
+    private static int[] doArrayStepRight(int[] array) {
+        int i = 0;
+        int tmp = 0;
+        tmp = array[array.length-1];
+        int t = 0, t1;
+        for (int j = i+1; j < array.length; j++) {
+            if (j == i+1) {
+                t = array[j];
+                array[j] = array[i];
+            }
+            else {
+                t1 = array[j];
+                array[j] = t;
+                t = t1;
+            }
+        }
+        array[i] = tmp;
+
+        return array;
+    }
+
+
+    /**
+     *7. ** Написать метод, в который передается не пустой одномерный целочисленный массив,
+     * метод должен вернуть true, если в массиве есть место,
+     * в котором сумма левой и правой части массива равны.
+     */
+    private static boolean doTask7(int[] array) {
+        for (int i = 0; i < array.length; i++) {
+            int left_sum = 0;
+            int right_sum = 0;
+            for (int j = 0; j < i; j++) {
+                left_sum += array[j];
+            }
+            for (int j = i; j < array.length; j++) {
+                right_sum += array[j];
+            }
+            System.out.println(left_sum+" "+right_sum);
+            if (left_sum == right_sum) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Create and fill random int[]
+     * @param max
+     * @param length
+     * @return
+     */
+    private static int[] getRandomArray(int max, int length) {
+        Random random = new Random();
+        int[] array = {};
+        for (int i = 0; i < length; i++) {
+            array = Arrays.copyOf(array, i+1);
+            array[i] = random.nextInt(max);
+        }
+        return array;
+    }
+
+    /**
+     * 6. * Задать одномерный массив и найти в нем минимальный и максимальный элементы ;
+     */
+    private static void doTask6() {
+        int[] array = getRandomArray(100, 10);
+
+        printArray(array);
+
+        int max = 0;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] > max) {
+                max = array[i];
+            }
+        }
+        System.out.println("Max value: "+max);
+    }
+
 
     /**
      * 5. Написать метод, принимающий на вход два аргумента: len и initialValue,
