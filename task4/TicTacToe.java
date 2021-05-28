@@ -1,12 +1,19 @@
 package task4;
 
+import task3.Main;
+
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
 /**
  * 1. Уйти от проверок в лоб, переделать на циклы
+ *      Создаём массив счётчиков вариантов подеды, заполняем пройдясь по полю
+ *      Перебираем счётчики, смотрим кто достиг значения длины поля
  * 2. Увеличить поле до 5
- * 3. добавить ИИ
+ * 3. добавить ИИ, чтобы он мог блокировать ходы игрока.
+ *      Тоже самое, что и при проверке на победу, пусть ИИ ставит 0 туда,
+ *      где в массиве счётчиков (длина поля-1) и нет его ходов в своём массиве побед
  */
 
 public class TicTacToe {
@@ -14,12 +21,14 @@ public class TicTacToe {
     private static char CELL_EMPTY = '-';
 
 
-    public static void start() {
-        char[][] field = {
-                {CELL_EMPTY,CELL_EMPTY,CELL_EMPTY,},
-                {CELL_EMPTY,CELL_EMPTY,CELL_EMPTY,},
-                {CELL_EMPTY,CELL_EMPTY,CELL_EMPTY,}
-        };
+    public static void start(int field_length) {
+        char[][] field = new char[field_length][field_length];
+
+        for (int i = 0; i < field_length; i++) {
+            for (int j = 0; j < field.length; j++) {
+                field[i][j] = CELL_EMPTY;
+            }
+        }
 
         drawField(field);
 
@@ -35,10 +44,10 @@ public class TicTacToe {
                 break;
             }
 
-            doBot(field);
+            boolean is_win = doBot(field);
             drawField(field);
-            if (isWin(field,'0')) {
-                System.out.println("Sorry!!! You are winner!");
+            if (is_win) {
+                System.out.println("Sorry!!! You are looser!");
                 break;
             }
             if (isDraw(field)) {
@@ -60,25 +69,124 @@ public class TicTacToe {
         return true;
     }
 
+    private static int[] calcWin(char[][] field, char sign) {
+        int[] moovies = {};
+
+        for (int i = 0; i < field.length * 2 + 2; i++) {
+            moovies = Arrays.copyOf(moovies, moovies.length+1);
+            moovies[i] = 0;
+        }
+
+        for (int i = 0; i < field.length; i++) {
+            for (int j = 0; j < field.length; j++) {
+                if (i == j && field[i][j] == sign) {
+                    moovies[moovies.length-2] ++ ;
+                }
+                if (i + j + 1 == field.length && field[i][j] == sign) {
+                    moovies[moovies.length-1] ++ ;
+                }
+                if (field[i][j] == sign) {
+                    moovies[i] ++ ;
+                    moovies[j + field.length] ++ ;
+                }
+            }
+        }
+        return moovies;
+    }
+
     private static boolean isWin(char[][] field, char sign) {
-        for (int i = 0; i < field.length; i++) {
-            if (field[i][0] == sign && field[i][1] == sign && field[i][2] == sign) {
+
+        int[] moovies = calcWin(field, sign);
+
+        for (int i = 0; i < moovies.length; i++) {
+            if (moovies[i] >= field.length) {
                 return true;
             }
         }
-        for (int i = 0; i < field.length; i++) {
-            if (field[0][i] == sign && field[1][i] == sign && field[2][i] == sign) {
-                return true;
-            }
-        }
-        if (field[0][0] == sign && field[1][1] == sign && field[2][2] == sign) {
-            return true;
-        }
-        if (field[0][2] == sign && field[1][1] == sign && field[2][0] == sign) {
-            return true;
-        }
+
         return false;
     }
+
+    static boolean doBot(char[][] field) {
+        int[] human_moovies = calcWin(field, 'X');
+        int[] bot_moovies = calcWin(field, '0');
+
+        int danger_line = -1;
+        for (int i = 0; i < human_moovies.length; i++) {
+            if (
+                    human_moovies[i] >= field.length-1
+                    && bot_moovies[i] < 1
+            ) {
+                danger_line = i;
+                break;
+            }
+        }
+
+        int v = -1, h = -1;
+        if (danger_line > 0) {
+            if (danger_line < field.length) {
+                // Hor
+                v = danger_line;
+                for (int i = 0; i < field.length; i++) {
+                    if (isEmptyCell(field, v, i)) {
+                        h = i;
+                    }
+                }
+            }
+            else if (danger_line >= field.length && danger_line < human_moovies.length - 2) {
+                h = danger_line - field.length;
+                for (int i = 0; i < field.length; i++) {
+                    if (isEmptyCell(field, i, h)) {
+                        v = i;
+                    }
+                }
+            }
+            else if (danger_line == human_moovies.length - 2) {
+                // Diag 1
+                for (int i = 0; i < field.length; i++) {
+                    if (isEmptyCell(field, i, i)) {
+                        v = h = i;
+                    }
+                }
+            }
+            else {
+                // Diag 2
+                for (int i = 0; i < field.length; i++) {
+                    for (int j = 0; j < field.length; j++) {
+                        if (i + j + 1 == field.length && isEmptyCell(field, i, j)) {
+                            v = i;
+                            h = j;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (danger_line < 0 || v < 0 || h < 0) {
+            Random random = new Random();
+            do {
+                v = random.nextInt(field.length);
+                h = random.nextInt(field.length);
+            } while (isNotEmptyCell(field, v, h));
+        }
+
+        field[v][h] = '0';
+
+        return isWin(field,'0');
+    }
+
+    static boolean doMove(char[][] field) {
+        int v, h;
+        do {
+            v = getCoordinate(field, 'V');
+            h = getCoordinate(field, 'H');
+        } while (isNotEmptyCell (field, v, h));
+
+        field[v][h] = 'X';
+
+        return false;
+    }
+
 
     private static void drawField(char[][] field) {
         for (int i=0; i < field.length; i++) {
@@ -88,29 +196,6 @@ public class TicTacToe {
             System.out.println();
         }
         System.out.println();
-    }
-
-    static void doBot(char[][] field) {
-        Random random = new Random();
-
-        int v,h;
-
-        do {
-            v = random.nextInt(3);
-            h = random.nextInt(3);
-        } while (isNotEmptyCell (field, v, h));
-
-        field[v][h] = '0';
-    }
-
-    static void doMove(char[][] field) {
-        int v, h;
-        do {
-            v = getCoordinate(field, 'V');
-            h = getCoordinate(field, 'H');
-        } while (isNotEmptyCell (field, v, h));
-
-        field[v][h] = 'X';
     }
 
     private static boolean isEmptyCell(char[][] field, int v, int h) {
@@ -129,6 +214,16 @@ public class TicTacToe {
             coord = scanner.nextInt() - 1;
         } while (coord >= field.length || coord < 0);
         return coord;
+    }
+
+    private static void printArray(int[] array) {
+        for (int i = 0; i < array.length; i++) {
+            System.out.print(array[i]+" ");
+            if (i != 0 && i % 20 == 0) {
+                System.out.println("...");
+            }
+        }
+        System.out.println();
     }
 
 }
