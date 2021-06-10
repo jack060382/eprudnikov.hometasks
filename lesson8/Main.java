@@ -1,10 +1,7 @@
-package task4;
+package lesson8;
 
 public class Main {
-
     public static void main(String[] args) {
-        TicTacToe.start(3);
-
+        new CalcFrame();
     }
-
 }
