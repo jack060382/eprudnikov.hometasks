@@ -9,6 +9,8 @@ public class Calc extends JFrame {
 
     private JTextField inputArea;
 
+    private CalcState calcState = new CalcState();
+
     public Calc() {
         setTitle("Calc v1.0");
         setBounds(100, 100, 300,500);
@@ -26,35 +28,61 @@ public class Calc extends JFrame {
         JPanel bottom = new JPanel();
         bottom.setLayout(new GridLayout(5, 3));
 
-        DigitBtn digitBtn = new DigitBtn(inputArea);
-
-        for (int i = 0; i < 10; i++) {
-            JButton btn = new JButton(String.valueOf(i));
-            btn.addActionListener(digitBtn);
-            bottom.add(btn);
-        }
+        calcState.setTextArea(inputArea);
 
         JButton clear = new JButton(String.valueOf("C"));
         clear.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                calcState.setFirstOperand(0);
+                calcState.setSecondOperand(0);
+                calcState.setWaitState(false);
+                calcState.setOperator("");
+                calcState.setWaitDecimalPart(false);
                 inputArea.setText("");
             }
         });
         bottom.add(clear);
 
-        JButton plus = new JButton(String.valueOf("+"));
-        plus.addActionListener(new ActionListener() {
+        for (int i = 0; i < 10; i++) {
+            JButton btn = new JButton(String.valueOf(i));
+            DigitBtn digitBtn = new DigitBtn(calcState, String.valueOf(i));
+            btn.addActionListener(digitBtn);
+            bottom.add(btn);
+        }
+
+        JButton dec = new JButton(String.valueOf("."));
+        dec.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                inputArea.setText(inputArea.getText() + "+");
+                calcState.setWaitDecimalPart(true);
             }
         });
+        bottom.add(dec);
+
+        JButton plus = new JButton(String.valueOf("="));
+        plus.addActionListener(new OperatorBtn(calcState, "="));
         bottom.add(plus);
 
-        JButton calc = new JButton(String.valueOf("="));
-        calc.addActionListener(new CalcBtn(inputArea));
-        bottom.add(calc);
+        JButton res = new JButton(String.valueOf("+"));
+        res.addActionListener(new OperatorBtn(calcState, "+"));
+        bottom.add(res);
+
+        JButton minus = new JButton(String.valueOf("-"));
+        minus.addActionListener(new OperatorBtn(calcState, "-"));
+        bottom.add(minus);
+
+        JButton mult = new JButton(String.valueOf("*"));
+        mult.addActionListener(new OperatorBtn(calcState, "*"));
+        bottom.add(mult);
+
+        JButton div = new JButton(String.valueOf("/"));
+        div.addActionListener(new OperatorBtn(calcState, "/"));
+        bottom.add(div);
+
+        JButton sqrt = new JButton(String.valueOf("sqrt"));
+        sqrt.addActionListener(new OperatorBtn(calcState, "sqrt"));
+        bottom.add(sqrt);
 
         return bottom;
     }
