@@ -10,7 +10,15 @@ public class DigitBtn extends Btn implements ActionListener {
         super(calcState, name);
     }
 
-    protected void push() {
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        if (calcState.isWaitSecondOperand() && calcState.getOperator() == "") {
+            calcState.clear();
+            calcState.getTextArea().setText("");
+        }
+
         double operand;
         if (!calcState.isWaitSecondOperand()) {
             operand = calcState.getFirstOperand();
@@ -43,12 +51,7 @@ public class DigitBtn extends Btn implements ActionListener {
             calcState.setSecondOperand(Double.valueOf(operand));
         }
 
-        super.push();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        push();
+        pushBtn();
     }
 
 }

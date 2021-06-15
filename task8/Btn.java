@@ -15,7 +15,7 @@ public class Btn {
         this.calcState = calcState;
     }
 
-    protected void push() {
+    protected void pushBtn() {
         calcState.getTextArea().setText(calcState.toString());
     }
 

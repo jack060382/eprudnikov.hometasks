@@ -9,7 +9,8 @@ public class OperatorBtn extends Btn implements ActionListener {
         super(calcState, name);
     }
 
-    protected void push() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
         if (calcState.isWaitSecondOperand() || name == "sqrt") {
             // Calculating
             String operator = calcState.getOperator();
@@ -53,12 +54,7 @@ public class OperatorBtn extends Btn implements ActionListener {
         }
         calcState.setWaitState(true);
 
-        super.push();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        push();
+        pushBtn();
     }
 
 }

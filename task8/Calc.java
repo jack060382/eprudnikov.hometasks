@@ -34,11 +34,7 @@ public class Calc extends JFrame {
         clear.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                calcState.setFirstOperand(0);
-                calcState.setSecondOperand(0);
-                calcState.setWaitState(false);
-                calcState.setOperator("");
-                calcState.setWaitDecimalPart(false);
+                calcState.clear();
                 inputArea.setText("");
             }
         });

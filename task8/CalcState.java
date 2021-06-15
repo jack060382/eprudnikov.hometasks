@@ -15,6 +15,14 @@ public class CalcState {
         return inputArea;
     }
 
+    public void clear() {
+        firstOperand = 0;
+        secondOperand = 0;
+        isWaitSecondOperand = false;
+        isWaitDecimalPart = false;
+        operator = "";
+    }
+
     public void setTextArea(JTextField inputArea) {
         this.inputArea = inputArea;
     }
@@ -60,7 +68,7 @@ public class CalcState {
     }
 
     public String toString() {
-        //return String.valueOf(firstOperand) + " " + operator + " " + String.valueOf(secondOperand);
+        System.out.println(String.valueOf(firstOperand) + " " + operator + " " + String.valueOf(secondOperand));
         String result = "";
         if (firstOperand > 0) {
             result += String.valueOf(firstOperand);
