@@ -10,9 +10,12 @@ public class OperatorBtn extends Btn implements ActionListener {
     }
 
     protected void push() {
-        if (calcState.isWaitSecondOperand()) {
+        if (calcState.isWaitSecondOperand() || name == "sqrt") {
             // Calculating
             String operator = calcState.getOperator();
+            if (name == "sqrt") {
+                operator = name;
+            }
             switch (operator) {
                 case "+" : {
                     calcState.setFirstOperand(
@@ -34,11 +37,15 @@ public class OperatorBtn extends Btn implements ActionListener {
                             calcState.getFirstOperand() / calcState.getSecondOperand()
                     );
                 } break;
+                case "sqrt" : {
+                    calcState.setFirstOperand(
+                            Math.sqrt(calcState.getFirstOperand())
+                    );
+                } break;
             }
-            calcState.setOperator("");
             calcState.setSecondOperand(0);
         }
-        if (name != "=") {
+        if (name != "=" && name != "sqrt") {
             calcState.setOperator(name);
         }
         else {
