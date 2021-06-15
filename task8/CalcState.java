@@ -68,11 +68,11 @@ public class CalcState {
     }
 
     public String toString() {
-        System.out.println(String.valueOf(firstOperand) + " " + operator + " " + String.valueOf(secondOperand));
+        //System.out.println(String.valueOf(firstOperand) + " " + operator + " " + String.valueOf(secondOperand));
         String result = "";
-        if (firstOperand > 0) {
-            result += String.valueOf(firstOperand);
-        }
+
+        result += String.valueOf(firstOperand);
+
         if (operator != "") {
             result += operator;
         }

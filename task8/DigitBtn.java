@@ -26,13 +26,13 @@ public class DigitBtn extends Btn implements ActionListener {
         else {
             operand = calcState.getSecondOperand();
         }
-
-        if (operand == 0) {
+        System.out.println(operand);
+        if (operand == 0 && !calcState.isWaitDecimalPart()) {
             operand = Integer.valueOf(name);
         }
         else {
             if (calcState.isWaitDecimalPart()) {
-                if (Math.round(operand) < operand) {
+                if (Math.round(operand) < operand && operand != 0) {
                     operand = Double.valueOf(String.valueOf(operand) + name);
                 }
                 else {

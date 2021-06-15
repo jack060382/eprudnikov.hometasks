@@ -53,6 +53,7 @@ public class OperatorBtn extends Btn implements ActionListener {
             calcState.setOperator("");
         }
         calcState.setWaitState(true);
+        calcState.setWaitDecimalPart(false);
 
         pushBtn();
     }
