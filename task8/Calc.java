@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
 
 public class Calc extends JFrame {
 
@@ -26,7 +27,9 @@ public class Calc extends JFrame {
 
     private JPanel createBottomPannel() {
         JPanel bottom = new JPanel();
-        bottom.setLayout(new GridLayout(5, 3));
+        GridLayout gridLayout = new GridLayout(5, 3);
+        //gridLayout.
+        bottom.setLayout(gridLayout);
 
         calcState.setTextArea(inputArea);
 
@@ -55,6 +58,15 @@ public class Calc extends JFrame {
             }
         });
         bottom.add(dec);
+
+        JButton negate = new JButton(String.valueOf("+/-"));
+        negate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calcState.setWaitDecimalPart(true);
+            }
+        });
+        bottom.add(negate);
 
         JButton plus = new JButton(String.valueOf("="));
         plus.addActionListener(new OperatorBtn(calcState, "="));

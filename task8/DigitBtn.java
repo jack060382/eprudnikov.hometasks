@@ -25,7 +25,7 @@ public class DigitBtn extends Btn implements ActionListener {
         else {
             operand = calcState.getSecondOperand();
         }
-        
+
         if (operand == 0 && !calcState.isWaitDecimalPart()) {
             operand = Integer.valueOf(name);
         }
