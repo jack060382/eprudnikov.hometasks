@@ -17,7 +17,7 @@ public class Main {
 
     static void printExtended(ExtendedSeason[] seasons) {
         for (Object season : seasons) {
-            System.out.println(season.getOrder());
+            //System.out.println(season.getOrder());
         }
         //ExtendedSeason.S
     }
